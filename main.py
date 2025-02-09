@@ -5,12 +5,10 @@ from urllib.parse import urlparse
 import argparse
 
 def shorten_link(token, long_link):    
-
-    url = os.environ["URL"]
-
+    url = "https://api.vk.ru/method/utils.getShortLink"
     headers = {"Authorization": f"Bearer {token}"}
     params = {"v": 5.199, "url": long_link}
-    response = requests.get(url, headers=headers, params=params)
+    response = requests.post(url, headers=headers, params=params)
 
     response.raise_for_status()
 
@@ -42,8 +40,9 @@ def main():
     args = parser.parse_args()
     try:
         parsed_url = urlparse(args.url)
+        parsed_url_path = parsed_url.path[1:]
         if parsed_url.netloc == "vk.cc":
-            print(count_clics(vk_token, parsed_url.path[1:]))
+            print(count_clics(vk_token, parsed_url_path))
         else:
             short_link = shorten_link(vk_token, args.url)
             print(short_link)
